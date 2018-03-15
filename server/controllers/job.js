@@ -19,7 +19,11 @@ module.exports = {
     //view posted jobs
     retrieve(req, res){
         return Job
-            .findById(req.params.user_id)
+            .findAll({
+                where: {
+                    user_id: req.user.id,
+                }
+            })
             .then(jobs => {
                 if(!jobs){
                     return res.status(404).send({

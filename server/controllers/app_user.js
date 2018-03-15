@@ -27,6 +27,7 @@ module.exports = {
             .findAll({
                 where: {
                     status: 'approved',
+                    role_id:4
                 }
             })
             .then(users => {

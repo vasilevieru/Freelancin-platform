@@ -43,26 +43,26 @@ module.exports = (app, passport) => {
         app.get('/api/jobs', isLoggedIn, jobController.retrieveAvailable);
 
         //employers
-        app.post('/api/jobs', jobController.create);
+        app.post('/api/jobs', isLoggedIn, jobController.create);
 
-        app.get('/api/jobs/:user_id', jobController.retrieve);
+        app.get('/api/jobs/:user_id', isLoggedIn, jobController.retrieve);
 
         //app.get('/api/freelancers', app_userController.retrieve);
 
 
         /*staff*/
         //admin
-        app.post('/api/managers/signup', passport.authenticate('local-signup', {
+        app.post('/api/managers/signup', isLoggedIn, passport.authenticate('local-signup', {
             successRedirect: '/api/dashboard',
             failureRedirect: '/api/managers/signup'
         }));
 
         //manager and admin
-        app.patch('/api/:job_id', jobController.update);
+        app.patch('/api/:job_id', isLoggedIn, jobController.update);
 
         app.get('/api/freelancers/list', isLoggedIn, app_userController.list);
 
-        app.patch('/api/freelancers/:user_id', app_userController.update);
+        app.patch('/api/freelancers/:user_id',isLoggedIn, app_userController.update);
 
         app.get('/api/logout', authController.logout);
 

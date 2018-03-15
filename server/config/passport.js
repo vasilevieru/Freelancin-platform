@@ -49,7 +49,7 @@ module.exports = function (passport, user) {
                             password: userPassword,
                             firstname: req.body.firstname,
                             lastname: req.body.lastname,
-                            status:index.status,
+                            status:'new',
 
                         };
 

@@ -1,4 +1,4 @@
-var passport = require('passport');
+const passport = require('passport');
 const express = require('express');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
@@ -17,7 +17,7 @@ app.use(session({
     resave: true,
     saveUninitialized: true
 }));
-var models = require('./server/models');
+const models = require('./server/models');
 app.use(passport.initialize());
 app.use(passport.session());
 require('./server/routes/index.js')(app, passport);

@@ -19,11 +19,7 @@ module.exports = {
     //view posted jobs
     retrieve(req, res){
         return Job
-            .findAll({
-                where: {
-                    user_id: req.params.user_id,
-                }
-            })
+            .findById(req.params.user_id)
             .then(jobs => {
                 if(!jobs){
                     return res.status(404).send({
@@ -35,9 +31,9 @@ module.exports = {
             .catch(error => res.status(400).send(error));
     },
 
-    retriveAvailable(req, res){
+    retrieveAvailable(req, res){
         return Job
-            .findAll({
+            .find({
                 where: {
                     status: 'approved',
                 }
@@ -57,7 +53,7 @@ module.exports = {
         return Job
             .find({
                 where:{
-                    id:req.params.jobId,
+                    id:req.params.job_id,
                 },
             })
             .then(jobs => {
@@ -71,7 +67,7 @@ module.exports = {
                     .then(updatedJob => res.status(200).send(updatedJob))
                     .catch(error => res.status(400).send(error));
             })
-            .catch(error => res.status(400).send(   ))
+            .catch(error => res.status(400).send(error))
     }
 
 };

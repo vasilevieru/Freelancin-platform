@@ -4,87 +4,61 @@ const job = require('../models').job;
 module.exports = {
 
     //get all
-    retrieve(req, res){
+    list(req, res) {
         return App_User
             .findAll({
-                include: [
-                    {
-                        model: job,
-                        as: 'jobs',
-                    }
-                ],
-            })
-            .then(jobs => res.status())
-
-
-
-
-
-
-        /*.findById(req.params.user_id,{
-            include: [
-                {
-                    model: job,
-                    as:'jobs',
+                where: {
+                    role_id: 4,
                 }
-            ],
-        })
-
-        .then(app_user => {
-            if(!app_user){
-                return res.status(404).send({
-                    message: 'User not found',
-                });
-            }
-            return res.status(200).send(app_user);
-        })
-        .catch(error => res.status(400).send(error));*/
+            })
+            .then(users => {
+                if(!users){
+                    return res.status(404).send({
+                        message: 'Users not found',
+                    });
+                }
+                return res.status(200).send(users);
+            })
+            .catch(error => res.status(400).send(error));
     },
 
-    //create a employer
-    create_employer(req, res) {
+    retrieve(req, res) {
         return App_User
-            .create({
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                email: req.body.email,
-                status: 'approved',
-                password: req.body.password,
-                role_id: 3,
+            .findAll({
+                where: {
+                    status: 'approved',
+                }
             })
-            .then(app_user => res.status(201).send(app_user))
-            .catch(error => res.status(404).send(error));
-    },
-
-    //create a freelancer
-    create_freelancer(req, res) {
-        return App_User
-            .create({
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                email: req.body.email,
-                status: 'new',
-                password: req.body.password,
-                role_id: 4,
+            .then(users => {
+                if(!users){
+                    return res.status(404).send({
+                        message: 'Users not found',
+                    });
+                }
+                return res.status(200).send(users);
             })
-            .then(app_user => res.status(201).send(app_user))
-            .catch(error => res.status(404).send(error));
-    },
-
-    //create a manager
-    create_manager(req, res) {
-        return App_User
-            .create({
-                firstname: req.body.firstname,
-                lastname: req.body.lastname,
-                email: req.body.email,
-                status: 'approved',
-                password: req.body.password,
-                role_id: 2,
-            })
-            .then(app_user => res.status(201).send(app_user))
-            .catch(error => res.status(404).send(error));
+            .catch(error => res.status(400).send(error));
     },
 
     //modify
+    update(req, res){
+        return App_User
+            .find({
+                where:{
+                    id:req.params.user_id,
+                },
+            })
+            .then(users => {
+                if(!users){
+                    return res.status(404).send({
+                        message: 'User not found',
+                    });
+                }
+                return users
+                    .update(req.body, {fields: Object.keys(req.body)})
+                    .then(upatedUser => res.status(200).send(upatedUser))
+                    .catch(error => res.status(400).send(error));
+            })
+            .catch(error => res.status(400).send(error))
+    }
 };

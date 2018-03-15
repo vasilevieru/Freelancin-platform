@@ -21,7 +21,7 @@ module.exports = {
     create(req, res){
         return Profile
             .create({
-                user_id: null,
+                user_id: req.user.id,
                 description: req.body.description,
                 hourly_rate: req.body.hourly_rate,
                 skills: req.body.skills,

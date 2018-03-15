@@ -5,41 +5,30 @@ const authController = require('../controllers/auth');
 
 var role_id;
 
+
 module.exports = (app, passport) => {
+
     app.get('/api', (req, res) => res.status(200).send({
         message: 'Welcome to the API!',
     }));
 
-    //freelancers
+    //freelancers registration
+    app.post('/api/freelancers/signup', passport.authenticate('local-signup', {
+        successRedirect: '/api/dashboard',
+        failureRedirect: '/api/freelancers/signup'
+    }));
+
     app.post('/api/freelancers/signin', passport.authenticate('local-signin', {
             successRedirect: '/api/dashboard',
             failureRedirect: '/api/freelancers/signin'
         }
     ));
 
-    app.post('/api/freelancers/signup', passport.authenticate('local-signup', {
-        successRedirect: '/api/dashboard',
-        failureRedirect: '/api/freelancers/signup'
-    }));
-
-    app.post('/api/freelancers/profile', profileController.create);
-
-    app.get('/api/profile/:user_id', isLoggedIn, profileController.retrieve);
-
-    app.get('/api/jobs', isLoggedIn, jobController.retrieveAvailable);
-
-
-    //employers
+    //employers registration
     app.post('/api/employers/signup', passport.authenticate('local-signup', {
         successRedirect: '/api/dashboard',
         failureRedirect: '/api/employers/signup'
     }));
-
-    app.post('/api/jobs', jobController.create);
-
-    app.get('/api/jobs/:user_id', jobController.retrieve);
-
-    //app.get('/api/freelancers', app_userController.retrieve);
 
     app.post('/api/employers/signin', passport.authenticate('local-signin', {
             successRedirect: '/api/dashboard',
@@ -47,32 +36,45 @@ module.exports = (app, passport) => {
         }
     ));
 
-    /*staff*/
-    //admin
-    app.post('/api/managers/registration', passport.authenticate('local-signup', {
-        successRedirect: '/api/dashboard',
-        failureRedirect: '/api/managers/signup'
-    }));
+        app.post('/api/freelancers/profile', isLoggedIn, profileController.create);
 
-    //manager and admin
-    app.patch('/api/:job_id', jobController.update);
+        app.get('/api/profile/:user_id', isLoggedIn, profileController.retrieve);
 
-    app.get('/api/freelancers/list', isLoggedIn, app_userController.list);
+        app.get('/api/jobs', isLoggedIn, jobController.retrieveAvailable);
 
-    app.patch('/api/freelancers/:user_id', app_userController.update);
+        //employers
+        app.post('/api/jobs', jobController.create);
 
-    app.get('/api/logout', authController.logout);
+        app.get('/api/jobs/:user_id', jobController.retrieve);
 
-    //guest
-    app.get('/api/freelancers', app_userController.retrieve);
-
-  //  app.get('/api/jobs', jobController.retriveAvailable);
+        //app.get('/api/freelancers', app_userController.retrieve);
 
 
-    app.get('/api/jobs/:user_id', isLoggedIn, jobController.retrieve);
+        /*staff*/
+        //admin
+        app.post('/api/managers/signup', passport.authenticate('local-signup', {
+            successRedirect: '/api/dashboard',
+            failureRedirect: '/api/managers/signup'
+        }));
+
+        //manager and admin
+        app.patch('/api/:job_id', jobController.update);
+
+        app.get('/api/freelancers/list', isLoggedIn, app_userController.list);
+
+        app.patch('/api/freelancers/:user_id', app_userController.update);
+
+        app.get('/api/logout', authController.logout);
+
+        //guest
+        app.get('/api/freelancers', app_userController.retrieve);
+
+        app.get('/api/jobs', jobController.retrieveAvailable);
+
 
     app.get('/api/dashboard', isLoggedIn, authController.dashboard);
 
+    //app.get('/api/jobs/:user_id', isLoggedIn, jobController.retrieve);
 
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) {
@@ -86,8 +88,9 @@ module.exports = (app, passport) => {
 
     function get_user_id(request, response) {
 
+        role_id = null;
         role_id = request.user.role_id;
-        console.log(request.user);
+        console.log('Role ID: ' + role_id);
         return request.user && request.user.id.toString() || false;
     }
 

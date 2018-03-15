@@ -43,13 +43,27 @@ module.exports = function (passport, user) {
 
                 else {
                     var userPassword = generateHash(password);
+                    var role;
+                    var status;
+                    if(req.url === '/api/freelancers/signup'){
+                        role = 4;
+                        status = 'new';
+                    }else if(req.url === '/api/employers/signup'){
+                        role = 3;
+                        status = 'approved';
+                    }else{
+                        role = 2;
+                        status = 'approved';
+                    }
+
                     var data =
                         {
                             email: email,
                             password: userPassword,
                             firstname: req.body.firstname,
                             lastname: req.body.lastname,
-                            status:'new',
+                            status:status,
+                            role_id:role,
 
                         };
 

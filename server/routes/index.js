@@ -59,6 +59,6 @@ module.exports = (app, passport) => {
             res.locals.user = req.session.user
             return next();
         }
-        res.send(401, 'User not authenticated');
+        res.status(401).send({message: 'User not authenticated'});
     }
 };

@@ -1,4 +1,5 @@
 var bCrypt = require('bcrypt-nodejs');
+var index = require('../routes/index');
 
 module.exports = function (passport, user) {
 
@@ -48,7 +49,7 @@ module.exports = function (passport, user) {
                             password: userPassword,
                             firstname: req.body.firstname,
                             lastname: req.body.lastname,
-                            status:
+                            status:index.status,
 
                         };
 

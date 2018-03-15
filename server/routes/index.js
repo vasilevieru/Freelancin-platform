@@ -42,78 +42,72 @@ module.exports = (app, passport) => {
         }
     ));
 
-        app.post('/api/freelancers/profile', isLoggedIn, function (req, res) {
-            if(role_id === 4) {
-                profileController.create(req, res);
-            }else
-                res.send({message: 'You do not have permission'});
-        });
+    app.post('/api/freelancers/profile', isLoggedIn, function (req, res) {
+        if (role_id === 4) {
+            profileController.create(req, res);
+        } else
+            res.send({message: 'You do not have permission'});
+    });
 
-        app.get('/api/profile/:user_id', isLoggedIn, function (req, res) {
-            if(role_id === 4){
-                profileController.retrieve(req, res);
-            }else
-                res.send({message: 'You do not have permission'});
-        });
+    app.get('/api/profile/:user_id', isLoggedIn, function (req, res) {
+        if (role_id === 4) {
+            profileController.retrieve(req, res);
+        } else
+            res.send({message: 'You do not have permission'});
+    });
 
-        app.get('/api/jobs', jobController.retrieveAvailable);
+    app.get('/api/jobs', jobController.retrieveAvailable);
 
-        //employers
-        app.post('/api/jobs', isLoggedIn, jobController.create);
+    //employers
+    app.post('/api/jobs', isLoggedIn, jobController.create);
 
-        app.get('/api/jobs/:user_id', isLoggedIn, function (req, res) {
-            if(role_id === 3) {
-                jobController.retrieve(req, res);
-            }
-            else{
-                res.send({message: 'You do not have permission'});
-            }
-        });
+    app.get('/api/jobs/:user_id', isLoggedIn, function (req, res) {
+        if (role_id === 3) {
+            jobController.retrieve(req, res);
+        }
+        else {
+            res.send({message: 'You do not have permission'});
+        }
+    });
 
-        app.get('/api/freelancers', app_userController.retrieve);
+    app.get('/api/freelancers', app_userController.retrieve);
 
 
-        /*staff*/
-        //admin
-        app.post('/api/managers/signup', isLoggedIn, function (req, res) {
-            passport.authenticate('local-signup', {
+    /*staff*/
+    //admin
+    app.post('/api/managers/signup', isLoggedIn, passport.authenticate('local-signup', {
                 successRedirect: '/api/dashboard',
                 failureRedirect: '/api/managers/signup'
-            });
-        });
+    }));
 
-        //manager and admin
-        app.patch('/api/:job_id', isLoggedIn, function (req, res) {
-            if(role_id === 2 || role_id === 1){
-                jobController.update(req, res);
-            }else
-                res.send({message: 'You do not have permission'});
-        });
+    //manager and admin
+    app.patch('/api/:job_id', isLoggedIn, function (req, res) {
+        if (role_id === 2 || role_id === 1) {
+            jobController.update(req, res);
+        }else
+            res.send({message: 'You do not have permission'});
+    });
 
-        app.get('/api/freelancers/list', isLoggedIn, function (req, res) {
-            if(role_id === 2 || role_id === 1){
-                app_userController.list(req, res)
-            }else
-                res.send({message: 'You do not have permission'});
-        });
+    app.get('/api/freelancers/list', isLoggedIn, function (req, res) {
+        if (role_id === 2 || role_id === 1) {
+            app_userController.list(req, res)
+        } else
+            res.send({message: 'You do not have permission'});
+    });
 
-        app.patch('/api/freelancers/:user_id',isLoggedIn, function (req, res) {
-            if(role_id === 2 || role_id === 1){
-                app_userController.update(req, res);
-            }else
-                res.send({message: 'You do not have permission'});
-        });
+    app.patch('/api/freelancers/:user_id', isLoggedIn, function (req, res) {
+        if (role_id === 2 || role_id === 1) {
+            app_userController.update(req, res);
+        } else
+            res.send({message: 'You do not have permission'});
+    });
 
-        app.get('/api/logout', authController.logout);
-
-
-        //guest
+    app.get('/api/logout', authController.logout);
 
 
-
+    //guest
     app.get('/api/dashboard', isLoggedIn, authController.dashboard);
 
-    //app.get('/api/jobs/:user_id', isLoggedIn, jobController.retrieve);
 
     function isLoggedIn(req, res, next) {
         if (req.isAuthenticated()) {

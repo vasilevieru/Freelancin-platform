@@ -51,7 +51,7 @@ module.exports = function (passport, user) {
                     }else if(req.url === '/api/employers/signup'){
                         role = 3;
                         status = 'approved';
-                    }else{
+                    }else if(req.url === '/api/managers/signup'){
                         role = 2;
                         status = 'approved';
                     }
